@@ -62,7 +62,7 @@ size_t		s_size_parse(t_pfarg *arg)
 	if (arg->size_flag == 1)
 		parsed_arg = (char)va_arg(*(arg->argp), int);
 	else if (arg->size_flag == 2)
-		parsed_arg = (short int)va_arg(*(arg->argp), int);
+		parsed_arg = (short)va_arg(*(arg->argp), int);
 	else if (arg->size_flag == 3)
 		parsed_arg = va_arg(*(arg->argp), long int);
 	else if (arg->size_flag == 4)
@@ -203,6 +203,11 @@ int			parse_size_flags(char **str, t_pfarg *arg)
 		{
 			cur_size = (cur_size > 1) ? cur_size : 1;
 			*str = *str + 1;
+		}
+		else if (**str == 'h' && arg->size_flag == 2)
+		{
+			cur_size = 1;
+			arg->size_flag = 1;
 		}
 		else if (**str == 'h')
 			cur_size = (cur_size > 2) ? cur_size : 2;
