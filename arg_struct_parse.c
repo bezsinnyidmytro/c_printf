@@ -79,7 +79,7 @@ size_t		s_size_parse(t_pfarg *arg)
 // CHAR PARSING
 char		*char_parse(t_pfarg *arg)
 {
-	char	*res;
+	char	*res;												// CODE FOR C and lc need to be here
 
 	res = (char *)malloc(sizeof(char) * 2);
 	res[1] = 0;
@@ -142,6 +142,8 @@ char		*string_parse(t_pfarg *arg)
 	is_first = 1;
 	res = ft_strnew(0);
 	s = va_arg(*(arg->argp), wchar_t *);
+	if (!s)
+		return ("(null)");
 	while (*s != '\0' && (arg->prec == -1 || (arg->prec != -1 && sum_width < arg->prec)))
 	{
 		if (*s <= 0x7F)
@@ -153,7 +155,7 @@ char		*string_parse(t_pfarg *arg)
 		else if (*s <= 0x1FFFFF)
 			c_width = 4;
 		sum_width += c_width;
-		if (is_first || (arg->prec != -1 && sum_width < arg->prec) || arg->prec == -1)
+		if (is_first || (arg->prec != -1 && sum_width <= arg->prec) || arg->prec == -1)
 			insert_wchar(&res, c_width, *s);
 		is_first = 0;
 		s++;
