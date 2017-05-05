@@ -93,43 +93,6 @@ char			*ft_itoa(ssize_t n)
 	return (str);
 }
 
-// // FT_UITOA
-// static void		ft_uitoa_pos(size_t n, int size, char **str)
-// {
-// 	while (--size >= 0)
-// 	{
-// 		(*str)[size] = (char)(n % 10 + '0');
-// 		n = n / 10;
-// 	}
-// }
-
-// static int		ft_unbrlen(size_t n)
-// {
-// 	int		len;
-
-// 	len = 0;
-// 	while (n / 10 != 0)
-// 	{
-// 		len++;
-// 		n = n / 10;
-// 	}
-// 	len++;
-// 	return (len);
-// }
-
-// char			*ft_uitoa(size_t n)
-// {
-// 	int		size;
-// 	char	*str;
-
-// 	size = ft_unbrlen(n);
-// 	str = ft_strnew(size);
-// 	if (!str)
-// 		return (char *)(NULL);
-// 	ft_uitoa_pos(n, size, &str);
-// 	return (str);
-// }
-
 // FT_STRCHR
 char	*ft_strchr(const char *s, int c)
 {
@@ -183,7 +146,7 @@ char	*ft_strdup(const char *s1)
 }
 
 // FT_PUTSTR
-void	ft_putstr(char const *str)
+static void	ft_putstr(char const *str)
 {
 	if (!str)
 		return ;
@@ -192,6 +155,18 @@ void	ft_putstr(char const *str)
 		ft_putchar(*str);
 		str++;
 	}
+}
+
+void	ft_pfputstr(t_pfarg *arg)
+{
+	char	ch;
+
+	ch = '\0';
+	if (arg->is_zero_char == 1 && (arg->fmt_flags & 4) == 4)
+		write(1, &ch, 1);
+	ft_putstr(arg->cnt);
+	if (arg->is_zero_char == 1 && (arg->fmt_flags | 4) != arg->fmt_flags)
+		write(1, &ch, 1);
 }
 
 // FT_PUTCHAR

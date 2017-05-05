@@ -15,6 +15,7 @@ typedef struct 		s_pfarg
 	int				prec;
 	int				size_flag;
 	char			c_type;
+	int				is_zero_char;
 	//int				bytes;
 	va_list			*argp;
 }					t_pfarg;
@@ -31,7 +32,7 @@ void				uU_format(char **cnt, int flag_mask, int width, int prec);
 void				percent_format(char **cnt, int flag_mask, int width, int prec);
 void				str_format(char **cnt, int flag_mask, int width, int prec);
 void				p_format(char **cnt, int flag_mask, int width, int prec);
-void				cC_format(char **cnt, int flag_mask, int width, int prec, size_t *cnt_len);
+void				cC_format(char **cnt, int flag_mask, int width, int prec, size_t *cnt_len, int *is_zero_char);
 
 /*	LIBFT FUNCTIONS	*/
 char				*ft_strnew(size_t size);
@@ -40,7 +41,7 @@ char				*ft_uitoa(size_t n);
 char				*ft_strchr(const char *s, int c);
 unsigned long int	ft_strlen(const char *str);
 char				*ft_strdup(const char *s1);
-void				ft_putstr(char const *str);
+void				ft_pfputstr(t_pfarg *arg);
 void				ft_putchar(char ch);
 char				*ft_strjoin(char const *s1, char const *s2);
 char				*ft_strcat(char *s1, const char *s2);

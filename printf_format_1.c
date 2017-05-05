@@ -106,7 +106,7 @@ void	p_format(char **cnt, int flag_mask, int width, int prec)
 	//printf("Start %s end.\n", end_content);
 }
 
-void	cC_format(char **cnt, int flag_mask, int width, int prec, size_t *cnt_len)
+void	cC_format(char **cnt, int flag_mask, int width, int prec, size_t *cnt_len, int *is_zero_char)
 {
 	// Precision parse
 	int		c_len;
@@ -119,6 +119,7 @@ void	cC_format(char **cnt, int flag_mask, int width, int prec, size_t *cnt_len)
 	{
 		width--;
 		*cnt_len += 1;
+		*is_zero_char = 1;
 	}
 
 	end_content = ft_strdup(*cnt);

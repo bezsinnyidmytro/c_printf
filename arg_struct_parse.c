@@ -270,6 +270,7 @@ void		struct_parse(char **str, va_list *ap, int *b_printed)
 	arg->prec = -1;									// default prec
 	arg->size_flag = 0;
 	arg->c_type = 0;
+	arg->is_zero_char = 0;
 	//arg->bytes = 0;
 	arg->argp = ap;
 	*str = *str + 1;
@@ -296,12 +297,12 @@ void		struct_parse(char **str, va_list *ap, int *b_printed)
 		else if (arg->c_type == '%')
 			percent_format(&(arg->cnt), arg->fmt_flags, arg->width, arg->prec);
 		else if (arg->c_type == 'c' || arg->c_type == 'C')
-			cC_format(&(arg->cnt), arg->fmt_flags, arg->width, arg->prec, &(arg->cnt_len));
+			cC_format(&(arg->cnt), arg->fmt_flags, arg->width, arg->prec, &(arg->cnt_len), &(arg->is_zero_char));
 		else if (arg->c_type == 's' || arg->c_type == 'S')
 			str_format(&(arg->cnt), arg->fmt_flags, arg->width, arg->prec);
 		else if (arg->c_type == 'p')
 			p_format(&(arg->cnt), arg->fmt_flags, arg->width, arg->prec);
-		ft_putstr(arg->cnt);
+		ft_pfputstr(arg);
 		*b_printed += ft_strlen(arg->cnt) + arg->cnt_len;
 	}
 	//	printf("%s\n", (arg->cnt));
