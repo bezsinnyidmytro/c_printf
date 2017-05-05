@@ -104,6 +104,7 @@ void		insert_wchar(char **res, int width, size_t ch)
 	char	*tmp;
 
 	tmp = ft_strnew(0);
+	printf("Width is : %d\n", width);
 	if (width == 1)
 		tmp = ft_strjoin(tmp, wc_to_str(ch));
 	else
@@ -137,9 +138,9 @@ char		*string_parse(t_pfarg *arg)
 	if (arg->size_flag != 3)
 		return (va_arg(*(arg->argp), char *));
 	sum_width = 0;
-	res = "";
+	res = ft_strnew(0);
 	s = va_arg(*(arg->argp), wchar_t *);
-	while (*s != '\0' && arg->prec != -1 && sum_width < arg->prec)
+	while (*s != '\0' && (arg->prec == -1 || (arg->prec != -1 && sum_width < arg->prec)))
 	{
 		if (*s <= 0x7F)
 			c_width = 1;
