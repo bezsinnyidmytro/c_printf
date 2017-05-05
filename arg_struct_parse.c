@@ -76,7 +76,7 @@ size_t		s_size_parse(t_pfarg *arg)
 	return (parsed_arg);
 }
 
-
+// CHAR PARSING
 char		*char_parse(t_pfarg *arg)
 {
 	char	*res;
@@ -84,6 +84,75 @@ char		*char_parse(t_pfarg *arg)
 	res = (char *)malloc(sizeof(char) * 2);
 	res[1] = 0;
 	res[0] = (unsigned char)va_arg(*(arg->argp), int);
+	return (res);
+}
+
+// STIRNG PARSING
+
+char		*wc_to_str(int ch)
+{
+	char	*res;
+
+	res = ft_strnew(2);
+	res[1] = '\0';
+	res[0] = ch;
+	return (res);
+}
+
+void		insert_wchar(char **res, int width, size_t ch)
+{
+	char	*tmp;
+
+	tmp = ft_strnew(0);
+	if (width == 1)
+		tmp = ft_strjoin(tmp, wc_to_str(ch));
+	else
+	{
+		if (width == 2)
+			tmp = ft_strjoin(tmp, wc_to_str((ch >> 6) + 192));
+		else if (width == 3)
+		{
+			tmp = ft_strjoin(tmp, wc_to_str((ch >> 12) + 224));
+			tmp = ft_strjoin(tmp, wc_to_str(((ch >> 6) & 63) + 128));
+		}
+		else if (width == 4)
+		{
+			tmp = ft_strjoin(tmp, wc_to_str((ch >> 18) + 240));
+			tmp = ft_strjoin(tmp, wc_to_str(((ch >> 12) & 63) + 192));
+			tmp = ft_strjoin(tmp, wc_to_str(((ch >> 6) & 63) + 128));
+		}
+		tmp = ft_strjoin(tmp, wc_to_str((ch & 63) + 128));
+	}
+	*res = ft_strjoin(*res, tmp);
+	free(tmp);
+}
+
+char		*string_parse(t_pfarg *arg)
+{
+	char	*res;
+	wchar_t	*s;
+	int		c_width;
+	int		sum_width;
+
+	if (arg->size_flag != 3)
+		return (va_arg(*(arg->argp), char *));
+	sum_width = 0;
+	res = "";
+	s = va_arg(*(arg->argp), wchar_t *);
+	while (*s != '\0' && arg->prec != -1 && sum_width < arg->prec)
+	{
+		if (*s <= 0x7F)
+			c_width = 1;
+		else if (*s <= 0x7FF)
+			c_width = 2;
+		else if (*s <= 0xFFFF)
+			c_width = 3;
+		else if (*s <= 0x1FFFFF)
+			c_width = 4;
+		insert_wchar(&res, c_width, *s);
+		sum_width += c_width;
+		s++;
+	}
 	return (res);
 }
 
@@ -105,7 +174,8 @@ void		parse_arg(t_pfarg *arg)
 			arg->cnt = char_parse(arg);
 		if (arg->c_type == 's' || arg->c_type == 'S')
 		{
-			arg->cnt = va_arg(*(arg->argp), char *);
+			arg->cnt = string_parse(arg);
+			//arg->cnt = va_arg(*(arg->argp), char *);
 			arg->cnt = (arg->cnt == NULL) ? "(null)" : arg->cnt;
 		}
 		if (arg->c_type == '%')

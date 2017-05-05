@@ -5,6 +5,7 @@
 #include <stdlib.h>
 #include <stdarg.h>
 #include <unistd.h>
+#include <wchar.h>
 
 typedef struct 		s_pfarg
 {
