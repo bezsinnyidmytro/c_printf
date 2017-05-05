@@ -1,23 +1,6 @@
 #include "ft_printf.h"
 #include <string.h>
 
-// char	*ft_strjoin(char const *s1, char const *s2)
-// {
-// 	size_t	len;
-// 	char	*str_new;
-
-// 	if (!s1 || !s2)
-// 		return (NULL);
-// 	len = ft_strlen(s1) + ft_strlen(s2);
-// 	str_new = ft_strnew(len);
-// 	str_new[len] = '\0';
-// 	if (!str_new)
-// 		return (NULL);
-// 	str_new = strcat(str_new, s1);
-// 	str_new = strcat(str_new, s2);
-// 	return (str_new);
-// }
-
 void	p_format(char **cnt, int flag_mask, int width, int prec)
 {
 	// Assumed that content stores str of positive value

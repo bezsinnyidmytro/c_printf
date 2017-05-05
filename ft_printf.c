@@ -15,12 +15,6 @@ int				ft_printf(char *str, ...)
 			write(1, str, 1);
 			str++;
 		}
-		// else if (*str == '%' && *(str + 1) == '%')
-		// {
-		// 	b_printed++;
-		// 	write(1, str, 1);
-		// 	str = str + 2;
-		// }
 		else
 		{
 			struct_parse(&str, &argp, &b_printed);

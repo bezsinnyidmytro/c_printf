@@ -16,7 +16,6 @@ typedef struct 		s_pfarg
 	int				size_flag;
 	char			c_type;
 	int				is_zero_char;
-	//int				bytes;
 	va_list			*argp;
 }					t_pfarg;
 
