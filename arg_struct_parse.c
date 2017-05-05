@@ -104,7 +104,7 @@ void		insert_wchar(char **res, int width, size_t ch)
 	char	*tmp;
 
 	tmp = ft_strnew(0);
-	printf("Width is : %d\n", width);
+	//printf("Width is : %d\n", width);
 	if (width == 1)
 		tmp = ft_strjoin(tmp, wc_to_str(ch));
 	else
