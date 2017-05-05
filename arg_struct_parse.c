@@ -134,10 +134,12 @@ char		*string_parse(t_pfarg *arg)
 	wchar_t	*s;
 	int		c_width;
 	int		sum_width;
+	int		is_first;
 
 	if (arg->size_flag != 3)
 		return (va_arg(*(arg->argp), char *));
 	sum_width = 0;
+	is_first = 1;
 	res = ft_strnew(0);
 	s = va_arg(*(arg->argp), wchar_t *);
 	while (*s != '\0' && (arg->prec == -1 || (arg->prec != -1 && sum_width < arg->prec)))
@@ -150,8 +152,10 @@ char		*string_parse(t_pfarg *arg)
 			c_width = 3;
 		else if (*s <= 0x1FFFFF)
 			c_width = 4;
-		insert_wchar(&res, c_width, *s);
 		sum_width += c_width;
+		if (is_first || (arg->prec != -1 && sum_width < arg->prec) || arg->prec == -1)
+			insert_wchar(&res, c_width, *s);
+		is_first = 0;
 		s++;
 	}
 	return (res);
@@ -347,6 +351,7 @@ void		struct_parse(char **str, va_list *ap, int *b_printed)
 	arg->size_flag = 0;
 	arg->c_type = 0;
 	arg->is_zero_char = 0;
+	arg->cnt_len = 0;
 	//arg->bytes = 0;
 	arg->argp = ap;
 	*str = *str + 1;
