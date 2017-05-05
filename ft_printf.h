@@ -29,7 +29,7 @@ void				oO_format(char **cnt, int flag_mask, int width, int prec);
 void				xX_format(char **cnt, int flag_mask, int width, int prec, char c_type);
 void				uU_format(char **cnt, int flag_mask, int width, int prec);
 void				percent_format(char **cnt, int flag_mask, int width, int prec);
-void				str_format(char **cnt, int flag_mask, int width, int prec);
+void				str_format(t_pfarg *arg);
 void				p_format(char **cnt, int flag_mask, int width, int prec);
 void				cC_format(char **cnt, int flag_mask, int width, int prec, size_t *cnt_len, int *is_zero_char);
 

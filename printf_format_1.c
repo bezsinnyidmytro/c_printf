@@ -140,7 +140,7 @@ void	cC_format(char **cnt, int flag_mask, int width, int prec, size_t *cnt_len, 
 	//printf("Start %s end.\n", end_content);
 }
 
-void	str_format(char **cnt, int flag_mask, int width, int prec)
+void	str_format(t_pfarg *arg)
 {
 	// Precision parse
 	int		p_len;
@@ -153,16 +153,16 @@ void	str_format(char **cnt, int flag_mask, int width, int prec)
 	// fflush(stdout);
 
 	p_len = 0;
-	c_len = ft_strlen(*cnt);
+	c_len = ft_strlen(arg->cnt);
 	//c_len = (*cnt[0] == '-') ? c_len - 1 : c_len;
 	
 	// if (*cnt[0] == '0' && prec == 0)
 	// 	*cnt[0] = '\0';
 	//printf("Inside the percent_format\n");
-	end_content = ft_strdup(*cnt);
-	if (prec < c_len)
+	end_content = ft_strdup(arg->cnt);
+	if (arg->prec < c_len)
 	{
-		end_content[prec] = '\0';
+		end_content[arg->prec] = '\0';
 		// p_len = prec - c_len;
 		// tmp = ft_strnew(p_len);
 		// tmp[p_len] = '\0';
@@ -192,32 +192,32 @@ void	str_format(char **cnt, int flag_mask, int width, int prec)
 	int		z_flag;
 
 	c_len = ft_strlen(end_content);
-	if ((flag_mask & 4) == 4 && width > c_len)
+	if ((arg->fmt_flags & 4) == 4 && arg->width > c_len)
 	{
-		tmp = ft_strnew(width - c_len);
+		tmp = ft_strnew(arg->width - c_len);
 		i = -1;
-		while (++i < width - c_len)
+		while (++i < arg->width - c_len)
 			tmp[i] = ' ';
 		end_content = ft_strjoin(end_content, tmp);
 		free(tmp);
 	}
-	else if (width > c_len)
+	else if (arg->width > c_len)
 	{
-		z_flag = ((flag_mask & 8) == 8 && prec == -1) ? 1 : 0;
-		tmp = ft_strnew(width - c_len);
+		z_flag = ((arg->fmt_flags & 8) == 8 && arg->prec == -1) ? 1 : 0;
+		tmp = ft_strnew(arg->width - c_len);
 		i = -1;
 		if ((end_content[0] == '-' || end_content[0] == '+') && z_flag)
 		{
 			tmp[++i] = end_content[0];
 			end_content[0] = '0';
 		}
-		while (++i < width - c_len)
+		while (++i < arg->width - c_len)
 			tmp[i] = z_flag ? '0' : ' ';				// need to shift the sign if it's present
 		end_content = ft_strjoin(tmp, end_content);
 		free(tmp);
 	}
 	//free(*cnt);
-	*cnt = end_content;
+	arg->cnt = end_content;
 	//printf("Start %s end.\n", end_content);
 }
 

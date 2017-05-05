@@ -299,7 +299,7 @@ void		struct_parse(char **str, va_list *ap, int *b_printed)
 		else if (arg->c_type == 'c' || arg->c_type == 'C')
 			cC_format(&(arg->cnt), arg->fmt_flags, arg->width, arg->prec, &(arg->cnt_len), &(arg->is_zero_char));
 		else if (arg->c_type == 's' || arg->c_type == 'S')
-			str_format(&(arg->cnt), arg->fmt_flags, arg->width, arg->prec);
+			str_format(arg);
 		else if (arg->c_type == 'p')
 			p_format(&(arg->cnt), arg->fmt_flags, arg->width, arg->prec);
 		ft_pfputstr(arg);
