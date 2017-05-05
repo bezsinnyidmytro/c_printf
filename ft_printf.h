@@ -30,6 +30,8 @@ void				xX_format(char **cnt, int flag_mask, int width, int prec, char c_type);
 void				uU_format(char **cnt, int flag_mask, int width, int prec);
 void				percent_format(char **cnt, int flag_mask, int width, int prec);
 void				str_format(char **cnt, int flag_mask, int width, int prec);
+void				p_format(char **cnt, int flag_mask, int width, int prec);
+void				cC_format(char **cnt, int flag_mask, int width, int prec, size_t *cnt_len);
 
 /*	LIBFT FUNCTIONS	*/
 char				*ft_strnew(size_t size);
