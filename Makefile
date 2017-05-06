@@ -16,7 +16,10 @@ SRC = 	ft_printf.c \
 		itoa_base.c \
 		arg_struct_parse.c \
 		printf_format_1.c \
-		libft_func.c
+		ft_itoa.c \
+		ft_strnew.c \
+		libft_func_01.c \
+		libft_func_02.c
 
 OBJ = $(SRC:.c=.o)
 FLAGS = -Wall -Werror -Wextra
