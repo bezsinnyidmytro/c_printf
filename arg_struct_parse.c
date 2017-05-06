@@ -28,7 +28,7 @@ size_t		u_size_parse(t_pfarg *arg)
 	if (arg->size_flag == 1)
 		parsed_arg = (unsigned char)va_arg(*(arg->argp), int);
 	else if (arg->size_flag == 2)
-		parsed_arg = (unsigned short int)va_arg(*(arg->argp), int);
+		parsed_arg = (unsigned short)va_arg(*(arg->argp), int);
 	else if (arg->size_flag == 3)
 		parsed_arg = va_arg(*(arg->argp), unsigned long int);
 	else if (arg->size_flag == 4)
