@@ -77,13 +77,16 @@ size_t		s_size_parse(t_pfarg *arg)
 }
 
 // CHAR PARSING
-char		*char_parse(t_pfarg *arg)
+char		*char_parse(t_pfarg *arg, int udef_flag)
 {
 	char	*res;												// CODE FOR C and lc need to be here
 
 	res = (char *)malloc(sizeof(char) * 2);
 	res[1] = 0;
-	res[0] = (unsigned char)va_arg(*(arg->argp), int);
+	if (!udef_flag)
+		res[0] = (unsigned char)va_arg(*(arg->argp), int);
+	else
+		res[0] = arg->c_type;
 	return (res);
 }
 
@@ -167,28 +170,30 @@ void		parse_arg(t_pfarg *arg)
 {
 	// HERE CAN USE LIST of FUNCTIONS
 
-	if (ft_strchr("idDoOxXuUpcCsS%", arg->c_type))
+	if (1) //ft_strchr("idDoOxXuUpcCsS%", arg->c_type))
 	{
 		if (arg->c_type == 'i' || arg->c_type == 'd' || arg->c_type == 'D')
 			arg->cnt = ft_itoa(s_size_parse(arg));
-		if (arg->c_type == 'o' || arg->c_type == 'O')
+		else if (arg->c_type == 'o' || arg->c_type == 'O')
 			arg->cnt = ft_uitoa_base(u_size_parse(arg), 8);
-		if (arg->c_type == 'x' || arg->c_type == 'X')
+		else if (arg->c_type == 'x' || arg->c_type == 'X')
 			arg->cnt = ft_uitoa_base(u_size_parse(arg), 16);
-		if (arg->c_type == 'u' || arg->c_type == 'U')
+		else if (arg->c_type == 'u' || arg->c_type == 'U')
 			arg->cnt = ft_uitoa_base(u_size_parse(arg), 10);
-		if (arg->c_type == 'c' || arg->c_type == 'C')
-			arg->cnt = char_parse(arg);
-		if (arg->c_type == 's' || arg->c_type == 'S')
+		else if (arg->c_type == 'c' || arg->c_type == 'C')
+			arg->cnt = char_parse(arg, 0);
+		else if (arg->c_type == 's' || arg->c_type == 'S')
 		{
 			arg->cnt = string_parse(arg);
 			//arg->cnt = va_arg(*(arg->argp), char *);
 			arg->cnt = (arg->cnt == NULL) ? "(null)" : arg->cnt;
 		}
-		if (arg->c_type == '%')
+		else if (arg->c_type == '%')
 			arg->cnt = ft_strdup("%");
-		if (arg->c_type == 'p')
+		else if (arg->c_type == 'p')
 			arg->cnt = ft_uitoa_base((uintmax_t)va_arg(*(arg->argp), void *), 16);
+		else if (arg->c_type != -1)													// for undefined conversion
+			arg->cnt = char_parse(arg, 1);
 	}
 }
 
@@ -351,7 +356,7 @@ void		struct_parse(char **str, va_list *ap, int *b_printed)
 	arg->width = 0;									// default width
 	arg->prec = -1;									// default prec
 	arg->size_flag = 0;
-	arg->c_type = 0;
+	arg->c_type = -1;
 	arg->is_zero_char = 0;
 	arg->cnt_len = 0;
 	//arg->bytes = 0;
@@ -385,6 +390,8 @@ void		struct_parse(char **str, va_list *ap, int *b_printed)
 			str_format(arg);
 		else if (arg->c_type == 'p')
 			p_format(&(arg->cnt), arg->fmt_flags, arg->width, arg->prec);
+		else
+			cC_format(&(arg->cnt), arg->fmt_flags, arg->width, arg->prec, &(arg->cnt_len), &(arg->is_zero_char));	// for undefined conversions
 		ft_pfputstr(arg);
 		*b_printed += ft_strlen(arg->cnt) + arg->cnt_len;
 	}
