@@ -380,23 +380,23 @@ void		struct_parse(char **str, va_list *ap, int *b_printed)
 	if (arg->cnt)
 	{
 		if (arg->c_type == 'u' || arg->c_type == 'U')
-			uU_format(&(arg->cnt), arg->fmt_flags, arg->width, arg->prec);
+			uU_format(arg);
 		else if (arg->c_type == 'o' || arg->c_type == 'O')
-			oO_format(&(arg->cnt), arg->fmt_flags, arg->width, arg->prec);
+			oO_format(arg);
 		else if (arg->c_type == 'x' || arg->c_type == 'X')
-			xX_format(&(arg->cnt), arg->fmt_flags, arg->width, arg->prec, arg->c_type);
+			xX_format(arg);
 		else if (arg->c_type == 'i' || arg->c_type == 'd' || arg->c_type == 'D')
-			diD_format(&(arg->cnt), arg->fmt_flags, arg->width, arg->prec);
+			diD_format(arg);
 		else if (arg->c_type == '%')
-			percent_format(&(arg->cnt), arg->fmt_flags, arg->width, arg->prec);
+			percent_format(arg);
 		else if (arg->c_type == 'c' || arg->c_type == 'C')
-			cC_format(&(arg->cnt), arg->fmt_flags, arg->width, arg->prec, &(arg->cnt_len), &(arg->is_zero_char));
+			cC_format(arg);
 		else if (arg->c_type == 's' || arg->c_type == 'S')
 			str_format(arg);
 		else if (arg->c_type == 'p')
-			p_format(&(arg->cnt), arg->fmt_flags, arg->width, arg->prec);
+			p_format(arg);
 		else
-			cC_format(&(arg->cnt), arg->fmt_flags, arg->width, arg->prec, &(arg->cnt_len), &(arg->is_zero_char));	// for undefined conversions
+			cC_format(arg);	// for undefined conversions
 		ft_pfputstr(arg);
 		*b_printed += ft_strlen(arg->cnt) + arg->cnt_len;
 	}

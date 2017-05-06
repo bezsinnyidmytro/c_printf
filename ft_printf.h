@@ -25,14 +25,14 @@ void				struct_parse(char **str, va_list *ap, int *b_printed);
 char				*ft_uitoa_base(size_t val, int base);		// need to change size-type of arg
 
 /*	FORMAT FUNCTIONS	*/
-void				diD_format(char **cnt, int flag_mask, int width, int prec);
-void				oO_format(char **cnt, int flag_mask, int width, int prec);
-void				xX_format(char **cnt, int flag_mask, int width, int prec, char c_type);
-void				uU_format(char **cnt, int flag_mask, int width, int prec);
-void				percent_format(char **cnt, int flag_mask, int width, int prec);
+void				diD_format(t_pfarg *arg);
+void				oO_format(t_pfarg *arg);
+void				xX_format(t_pfarg *arg);
+void				uU_format(t_pfarg *arg);
+void				percent_format(t_pfarg *arg);
 void				str_format(t_pfarg *arg);
-void				p_format(char **cnt, int flag_mask, int width, int prec);
-void				cC_format(char **cnt, int flag_mask, int width, int prec, size_t *cnt_len, int *is_zero_char);
+void				p_format(t_pfarg *arg);
+void				cC_format(t_pfarg *arg);
 
 /*	LIBFT FUNCTIONS	*/
 char				*ft_strnew(size_t size);

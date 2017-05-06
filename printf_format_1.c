@@ -1,7 +1,7 @@
 #include "ft_printf.h"
 #include <string.h>
 
-void	p_format(char **cnt, int flag_mask, int width, int prec)
+void	p_format(t_pfarg *arg)
 {
 	// Assumed that content stores str of positive value
 	int		p_len;
@@ -11,19 +11,16 @@ void	p_format(char **cnt, int flag_mask, int width, int prec)
 	char	*end_content;
 
 	p_len = 0;
-	c_len = ft_strlen(*cnt);
+	c_len = ft_strlen(arg->cnt);
 
-	if (*cnt[0] == '0' && prec == 0)
-		*cnt[0] = '\0';
-	else if (*cnt[0] == '0')
-		flag_mask = (flag_mask & 15);
-
-	end_content = ft_strdup(*cnt);
+	if (arg->cnt[0] == '0' && arg->prec == 0)
+		arg->cnt[0] = '\0';
+	end_content = ft_strdup(arg->cnt);
 
 	// Precision parse
-	if (prec > c_len)
+	if (arg->prec > c_len)
 	{
-		p_len = prec - c_len;
+		p_len = arg->prec - c_len;
 		tmp = ft_strnew(p_len);
 		tmp[p_len] = '\0';
 		i = 0;
@@ -42,78 +39,78 @@ void	p_format(char **cnt, int flag_mask, int width, int prec)
 	int		z_flag;
 
 	c_len = ft_strlen(end_content);
-	if ((flag_mask & 4) == 4 && width > c_len)
+	if ((arg->fmt_flags & 4) == 4 && arg->width > c_len)
 	{
-		tmp = ft_strnew(width - c_len);
+		tmp = ft_strnew(arg->width - c_len);
 		i = -1;
-		while (++i < width - c_len)
+		while (++i < arg->width - c_len)
 			tmp[i] = ' ';
 		end_content = ft_strjoin(end_content, tmp);
 		free(tmp);
 	}
-	else if (width > c_len)
+	else if (arg->width > c_len)
 	{
-		z_flag = ((flag_mask & 8) == 8 && prec == -1) ? 1 : 0;
-		tmp = ft_strnew(width - c_len);
+		z_flag = ((arg->fmt_flags & 8) == 8 && arg->prec == -1) ? 1 : 0;
+		tmp = ft_strnew(arg->width - c_len);
 		i = -1;
 		if (z_flag)
 			end_content[1] = '0';
-		while (++i < width - c_len)
+		while (++i < arg->width - c_len)
 			tmp[i] = z_flag ? '0' : ' ';
 		end_content = ft_strjoin(tmp, end_content);
 		if (z_flag)
 			end_content[1] = 'x';
 		free(tmp);
 	}
-	free(*cnt);
-	*cnt = end_content;
+	free(arg->cnt);
+	arg->cnt = end_content;
 }
 
-void	cC_format(char **cnt, int flag_mask, int width, int prec, size_t *cnt_len, int *is_zero_char)
+void	cC_format(t_pfarg *arg)
 {
 	int		c_len;
 	char	*tmp;
 	int		i;
 	char	*end_content;
 
-	c_len = ft_strlen(*cnt);
-	if (*cnt[0] == '\0')
+	c_len = ft_strlen(arg->cnt);
+	if (arg->cnt[0] == '\0')
 	{
-		width--;
-		*cnt_len += 1;
-		*is_zero_char = 1;
+		arg->width--;
+		arg->cnt_len += 1;
+		arg->is_zero_char = 1;
 	}
 
-	end_content = ft_strdup(*cnt);
+	end_content = ft_strdup(arg->cnt);
 	
 	int		z_flag;
 
 	// Precision parse
-	if (prec == -1)
-		prec = -1;
+	if (arg->prec == -1)
+		arg->prec = -1;
 
 	c_len = ft_strlen(end_content);
-	if ((flag_mask & 4) == 4 && width > c_len)
+	if ((arg->fmt_flags & 4) == 4 && arg->width > c_len)
 	{
-		tmp = ft_strnew(width - c_len);
+		tmp = ft_strnew(arg->width - c_len);
 		i = -1;
-		while (++i < width - c_len)
+		while (++i < arg->width - c_len)
 			tmp[i] = ' ';
 		end_content = ft_strjoin(end_content, tmp);
 		free(tmp);
 	}
-	else if (width > c_len)
+	else if (arg->width > c_len)
 	{
-		z_flag = ((flag_mask & 8) == 8) ? 1 : 0;
-		tmp = ft_strnew(width - c_len);
+		z_flag = ((arg->fmt_flags & 8) == 8) ? 1 : 0;
+		tmp = ft_strnew(arg->width - c_len);
 		i = -1;
-		while (++i < width - c_len)
+		while (++i < arg->width - c_len)
 			tmp[i] = z_flag ? '0' : ' ';
 		end_content = ft_strjoin(tmp, end_content);
 		free(tmp);
 	}
-	free(*cnt);
-	*cnt = end_content;
+	free(arg->cnt);
+	arg->cnt = end_content;
 }
 
 void	str_format(t_pfarg *arg)
@@ -150,11 +147,6 @@ void	str_format(t_pfarg *arg)
 		z_flag = ((arg->fmt_flags & 8) == 8) ? 1 : 0;
 		tmp = ft_strnew(arg->width - c_len);
 		i = -1;
-		if ((end_content[0] == '-' || end_content[0] == '+') && z_flag)
-		{
-			tmp[++i] = end_content[0];
-			end_content[0] = '0';
-		}
 		while (++i < arg->width - c_len)
 			tmp[i] = z_flag ? '0' : ' ';
 		end_content = ft_strjoin(tmp, end_content);
@@ -163,52 +155,47 @@ void	str_format(t_pfarg *arg)
 	arg->cnt = end_content;
 }
 
-void	percent_format(char **cnt, int flag_mask, int width, int prec)
+void	percent_format(t_pfarg *arg)
 {
 	int		c_len;
 	char	*tmp;
 	int		i;
 	char	*end_content;
 
-	end_content = ft_strdup(*cnt);
+	end_content = ft_strdup(arg->cnt);
 
 	// -, 0 flag parse
 	int		z_flag;
 
 	// Precision parse
-	if (prec == -1)
-		prec = -1;
+	if (arg->prec == -1)
+		arg->prec = -1;
 
 	c_len = ft_strlen(end_content);
-	if ((flag_mask & 4) == 4 && width > c_len)
+	if ((arg->fmt_flags & 4) == 4 && arg->width > c_len)
 	{
-		tmp = ft_strnew(width - c_len);
+		tmp = ft_strnew(arg->width - c_len);
 		i = -1;
-		while (++i < width - c_len)
+		while (++i < arg->width - c_len)
 			tmp[i] = ' ';
 		end_content = ft_strjoin(end_content, tmp);
 		free(tmp);
 	}
-	else if (width > c_len)
+	else if (arg->width > c_len)
 	{
-		z_flag = ((flag_mask & 8) == 8) ? 1 : 0;
-		tmp = ft_strnew(width - c_len);
+		z_flag = ((arg->fmt_flags & 8) == 8) ? 1 : 0;
+		tmp = ft_strnew(arg->width - c_len);
 		i = -1;
-		if ((end_content[0] == '-' || end_content[0] == '+') && z_flag)
-		{
-			tmp[++i] = end_content[0];
-			end_content[0] = '0';
-		}
-		while (++i < width - c_len)
+		while (++i < arg->width - c_len)
 			tmp[i] = z_flag ? '0' : ' ';
 		end_content = ft_strjoin(tmp, end_content);
 		free(tmp);
 	}
-	free(*cnt);
-	*cnt = end_content;
+	free(arg->cnt);
+	arg->cnt = end_content;
 }
 
-void	diD_format(char **cnt, int flag_mask, int width, int prec)
+void	diD_format(t_pfarg *arg)
 {
 	int		p_len;
 	int		c_len;
@@ -217,17 +204,19 @@ void	diD_format(char **cnt, int flag_mask, int width, int prec)
 	char	*end_content;
 
 	p_len = 0;
-	c_len = ft_strlen(*cnt);
-	c_len = (*cnt[0] == '-') ? c_len - 1 : c_len;
+	c_len = ft_strlen(arg->cnt);
+	c_len = (arg->cnt[0] == '-') ? c_len - 1 : c_len;
 	
-	if (*cnt[0] == '0' && prec == 0)
-		*cnt[0] = '\0';
-
-	end_content = ft_strdup(*cnt);
+	// SIMILAR to oO xX uU p can add some usefull free on arg->cnt
+	if (arg->cnt[0] == '0' && arg->prec == 0)
+		arg->cnt[0] = '\0';
+	end_content = ft_strdup(arg->cnt);
+	
 	// Precision parse
-	if (prec > c_len)
+	// SIMILAR to oO xX uU p
+	if (arg->prec > c_len)
 	{
-		p_len = prec - c_len;
+		p_len = arg->prec - c_len;
 		tmp = ft_strnew(p_len);
 		tmp[p_len] = '\0';
 		i = 0;
@@ -247,30 +236,32 @@ void	diD_format(char **cnt, int flag_mask, int width, int prec)
 	}
 
 	// Space, + flags parse
-	if ((flag_mask & 1) == 1 && end_content[0] != '-')
+	if ((arg->fmt_flags & 1) == 1 && end_content[0] != '-')
 		end_content = ft_strjoin("+", end_content);
-	else if ((flag_mask & 2) == 2 && end_content[0] != '-')
+	else if ((arg->fmt_flags & 2) == 2 && end_content[0] != '-')
 		end_content = ft_strjoin(" ", end_content);
 
 	// -, 0 flag parse
 	int		z_flag;
 
 	c_len = ft_strlen(end_content);
-	if ((flag_mask & 4) == 4 && width > c_len)
+	if ((arg->fmt_flags & 4) == 4 && arg->width > c_len)
 	{
-		tmp = ft_strnew(width - c_len);
+		// SIMILAR to oO xX uU % str char 
+		tmp = ft_strnew(arg->width - c_len);
 		i = -1;
-		while (++i < width - c_len)
+		while (++i < arg->width - c_len)
 			tmp[i] = ' ';
 		end_content = ft_strjoin(end_content, tmp);
 		free(tmp);
 	}
-	else if (width > c_len)
+	else if (arg->width > c_len)
 	{
-		z_flag = ((flag_mask & 8) == 8 && prec == -1) ? 1 : 0;
-		tmp = ft_strnew(width - c_len);
+		// SIMILAR to oO xX uU % str
+		z_flag = ((arg->fmt_flags & 8) == 8 && arg->prec == -1) ? 1 : 0;
+		tmp = ft_strnew(arg->width - c_len);
 		i = -1;
-		while (++i < width - c_len)
+		while (++i < arg->width - c_len)
 			tmp[i] = z_flag ? '0' : ' ';
 		if (z_flag && (end_content[0] == ' ' || end_content[0] == '+' || end_content[0] == '-'))
 		{
@@ -280,14 +271,13 @@ void	diD_format(char **cnt, int flag_mask, int width, int prec)
 		end_content = ft_strjoin(tmp, end_content);
 		free(tmp);
 	}
-	free(*cnt);
-	*cnt = end_content;
+	free(arg->cnt);
+	arg->cnt = end_content;
 }
 
-void	oO_format(char **cnt, int flag_mask, int width, int prec)
+void	oO_format(t_pfarg *arg)
 {
 	// Assumed that content stores str of positive value
-	// Precision parse
 	int		p_len;
 	int		c_len;
 	char	*tmp;
@@ -295,16 +285,16 @@ void	oO_format(char **cnt, int flag_mask, int width, int prec)
 	char	*end_content;
 
 	p_len = 0;
-	c_len = ft_strlen(*cnt);
+	c_len = ft_strlen(arg->cnt);
 
-	if (*cnt[0] == '0' && prec == 0)
-		*cnt[0] = '\0';
+	if (arg->cnt[0] == '0' && arg->prec == 0)
+		arg->cnt[0] = '\0';
+	end_content = ft_strdup(arg->cnt);
 
-	end_content = ft_strdup(*cnt);
-
-	if (prec > c_len)
+	// Precision parse
+	if (arg->prec > c_len)
 	{
-		p_len = prec - c_len;
+		p_len = arg->prec - c_len;
 		tmp = ft_strnew(p_len);
 		tmp[p_len] = '\0';
 		i = 0;
@@ -316,37 +306,37 @@ void	oO_format(char **cnt, int flag_mask, int width, int prec)
 		end_content = ft_strjoin(tmp, end_content);
 		free(tmp);
 	}
-	else if (end_content[0] != '0' && (flag_mask & 16) == 16)	// # parse
+	else if (end_content[0] != '0' && (arg->fmt_flags & 16) == 16)	// # parse
 		end_content = ft_strjoin("0", end_content);
 
 	// -, 0 flag parse
 	int		z_flag;
 
 	c_len = ft_strlen(end_content);
-	if ((flag_mask & 4) == 4 && width > c_len)
+	if ((arg->fmt_flags & 4) == 4 && arg->width > c_len)
 	{
-		tmp = ft_strnew(width - c_len);
+		tmp = ft_strnew(arg->width - c_len);
 		i = -1;
-		while (++i < width - c_len)
+		while (++i < arg->width - c_len)
 			tmp[i] = ' ';
 		end_content = ft_strjoin(end_content, tmp);
 		free(tmp);
 	}
-	else if (width > c_len)
+	else if (arg->width > c_len)
 	{
-		z_flag = ((flag_mask & 8) == 8 && prec == -1) ? 1 : 0;
-		tmp = ft_strnew(width - c_len);
+		z_flag = ((arg->fmt_flags & 8) == 8 && arg->prec == -1) ? 1 : 0;
+		tmp = ft_strnew(arg->width - c_len);
 		i = -1;
-		while (++i < width - c_len)
+		while (++i < arg->width - c_len)
 			tmp[i] = z_flag ? '0' : ' ';
 		end_content = ft_strjoin(tmp, end_content);
 		free(tmp);
 	}
-	free(*cnt);
-	*cnt = end_content;
+	free(arg->cnt);
+	arg->cnt = end_content;
 }
 
-void	xX_format(char **cnt, int flag_mask, int width, int prec, char c_type)
+void	xX_format(t_pfarg *arg)
 {
 	// Assumed that content stores str of positive value
 	// Precision parse
@@ -357,18 +347,17 @@ void	xX_format(char **cnt, int flag_mask, int width, int prec, char c_type)
 	char	*end_content;
 
 	p_len = 0;
-	c_len = ft_strlen(*cnt);
+	c_len = ft_strlen(arg->cnt);
 
-	if (*cnt[0] == '0' && prec == 0)
-		*cnt[0] = '\0';
-	else if (*cnt[0] == '0')
-		flag_mask = (flag_mask & 15);
+	if (arg->cnt[0] == '0' && arg->prec == 0)
+		arg->cnt[0] = '\0';
+	else if (arg->cnt[0] == '0')
+		arg->fmt_flags = (arg->fmt_flags & 15);
+	end_content = ft_strdup(arg->cnt);
 
-	end_content = ft_strdup(*cnt);
-
-	if (prec > c_len)
+	if (arg->prec > c_len)
 	{
-		p_len = prec - c_len;
+		p_len = arg->prec - c_len;
 		tmp = ft_strnew(p_len);
 		tmp[p_len] = '\0';
 		i = 0;
@@ -382,43 +371,43 @@ void	xX_format(char **cnt, int flag_mask, int width, int prec, char c_type)
 	}
 
 	// # parse
-	if ((flag_mask & 16) == 16 && (prec != 0 || *cnt[0] != '\0'))
+	if ((arg->fmt_flags & 16) == 16 && (arg->prec != 0 || arg->cnt[0] != '\0'))
 		end_content = ft_strjoin("0x", end_content);
 
 	// -, 0 flag parse
 	int		z_flag;
 
 	c_len = ft_strlen(end_content);
-	if ((flag_mask & 4) == 4 && width > c_len)
+	if ((arg->fmt_flags & 4) == 4 && arg->width > c_len)
 	{
-		tmp = ft_strnew(width - c_len);
+		tmp = ft_strnew(arg->width - c_len);
 		i = -1;
-		while (++i < width - c_len)
+		while (++i < arg->width - c_len)
 			tmp[i] = ' ';
 		end_content = ft_strjoin(end_content, tmp);
 		free(tmp);
 	}
-	else if (width > c_len)
+	else if (arg->width > c_len)
 	{
-		z_flag = ((flag_mask & 8) == 8 && prec == -1) ? 1 : 0;
-		tmp = ft_strnew(width - c_len);
+		z_flag = ((arg->fmt_flags & 8) == 8 && arg->prec == -1) ? 1 : 0;
+		tmp = ft_strnew(arg->width - c_len);
 		i = -1;
-		if (z_flag && (flag_mask & 16) == 16)
+		if (z_flag && (arg->fmt_flags & 16) == 16)
 			end_content[1] = '0';
-		while (++i < width - c_len)
+		while (++i < arg->width - c_len)
 			tmp[i] = z_flag ? '0' : ' ';
 		end_content = ft_strjoin(tmp, end_content);
-		if (z_flag && (flag_mask & 16) == 16)
+		if (z_flag && (arg->fmt_flags & 16) == 16)
 			end_content[1] = 'x';
 		free(tmp);
 	}
-	free(*cnt);
-	if (c_type == 'X')
+	free(arg->cnt);
+	if (arg->c_type == 'X')
 		ft_strcap(end_content);
-	*cnt = end_content;
+	arg->cnt = end_content;
 }
 
-void	uU_format(char **cnt, int flag_mask, int width, int prec)
+void	uU_format(t_pfarg *arg)
 {
 	// Assumed that content stores str of positive value
 	// Precision parse
@@ -429,16 +418,15 @@ void	uU_format(char **cnt, int flag_mask, int width, int prec)
 	char	*end_content;
 
 	p_len = 0;
-	c_len = ft_strlen(*cnt);
+	c_len = ft_strlen(arg->cnt);
 
-	if (*cnt[0] == '0' && prec == 0)
-		*cnt[0] = '\0';
+	if (arg->cnt[0] == '0' && arg->prec == 0)
+		arg->cnt[0] = '\0';
+	end_content = ft_strdup(arg->cnt);
 
-	end_content = ft_strdup(*cnt);
-
-	if (prec > c_len)
+	if (arg->prec > c_len)
 	{
-		p_len = prec - c_len;
+		p_len = arg->prec - c_len;
 		tmp = ft_strnew(p_len);
 		tmp[p_len] = '\0';
 		i = 0;
@@ -455,25 +443,25 @@ void	uU_format(char **cnt, int flag_mask, int width, int prec)
 	int		z_flag;
 
 	c_len = ft_strlen(end_content);
-	if ((flag_mask & 4) == 4 && width > c_len)
+	if ((arg->fmt_flags & 4) == 4 && arg->width > c_len)
 	{
-		tmp = ft_strnew(width - c_len);
+		tmp = ft_strnew(arg->width - c_len);
 		i = -1;
-		while (++i < width - c_len)
+		while (++i < arg->width - c_len)
 			tmp[i] = ' ';
 		end_content = ft_strjoin(end_content, tmp);
 		free(tmp);
 	}
-	else if (width > c_len)
+	else if (arg->width > c_len)
 	{
-		z_flag = ((flag_mask & 8) == 8 && prec == -1) ? 1 : 0;
-		tmp = ft_strnew(width - c_len);
+		z_flag = ((arg->fmt_flags & 8) == 8 && arg->prec == -1) ? 1 : 0;
+		tmp = ft_strnew(arg->width - c_len);
 		i = -1;
-		while (++i < width - c_len)
+		while (++i < arg->width - c_len)
 			tmp[i] = z_flag ? '0' : ' ';
 		end_content = ft_strjoin(tmp, end_content);	
 		free(tmp);
 	}
-	free(*cnt);
-	*cnt = end_content;
+	free(arg->cnt);
+	arg->cnt = end_content;
 }
