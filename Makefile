@@ -15,7 +15,8 @@ NAME = libftprintf.a
 SRC = 	ft_printf.c \
 		itoa_base.c \
 		arg_struct_parse.c \
-		printf_format_1.c \
+		printf_format_test.c \
+		printf_formats.c \
 		ft_itoa.c \
 		ft_strnew.c \
 		libft_func_01.c \

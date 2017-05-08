@@ -33,6 +33,8 @@ void				percent_format(t_pfarg *arg);
 void				str_format(t_pfarg *arg);
 void				p_format(t_pfarg *arg);
 void				cC_format(t_pfarg *arg);
+void				prec_format(t_pfarg *arg, char **end_content);
+void				zero_minus_format(t_pfarg *arg, char **end_content);
 
 /*	LIBFT FUNCTIONS	*/
 char				*ft_strnew(size_t size);
@@ -41,6 +43,7 @@ char				*ft_uitoa(size_t n);
 char				*ft_strchr(const char *s, int c);
 unsigned long int	ft_strlen(const char *str);
 char				*ft_strdup(const char *s1);
+char				*ft_strndup(const char *s1, int n);
 void				ft_pfputstr(t_pfarg *arg);
 void				ft_putchar(char ch);
 char				*ft_strjoin(char const *s1, char const *s2);
