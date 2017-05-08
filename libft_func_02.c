@@ -6,7 +6,7 @@
 /*   By: dbezsinn <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/05/06 15:23:45 by dbezsinn          #+#    #+#             */
-/*   Updated: 2017/05/06 15:23:58 by dbezsinn         ###   ########.fr       */
+/*   Updated: 2017/05/08 16:56:24 by dbezsinn         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,4 +62,13 @@ void				ft_pfputstr(t_pfarg *arg)
 	ft_putstr(arg->cnt);
 	if (arg->is_zero_char == 1 && (arg->fmt_flags | 4) != arg->fmt_flags)
 		write(1, &ch, 1);
+}
+
+void				ft_swap_chars(char *a, char *b)
+{
+	char	tmp;
+
+	tmp = *a;
+	*a = *b;
+	*b = tmp;
 }

@@ -1,8 +1,16 @@
-#include "ft_printf.h"
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   arg_struct_parse.c                                 :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: dbezsinn <marvin@42.fr>                    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2017/05/08 16:57:03 by dbezsinn          #+#    #+#             */
+/*   Updated: 2017/05/08 16:57:07 by dbezsinn         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
 
-/*------------------------------*/
-/*		PARSE SIZE FLAGS		*/
-/*______________________________*/
+#include "ft_printf.h"
 
 size_t		udef_size_parse(t_pfarg *arg)
 {
@@ -76,10 +84,9 @@ size_t		s_size_parse(t_pfarg *arg)
 	return (parsed_arg);
 }
 
-// CHAR PARSING
 char		*char_parse(t_pfarg *arg, int udef_flag)
 {
-	char	*res;												// CODE FOR C and lc need to be here
+	char	*res;
 
 	res = (char *)malloc(sizeof(char) * 2);
 	res[1] = 0;
@@ -90,7 +97,6 @@ char		*char_parse(t_pfarg *arg, int udef_flag)
 	return (res);
 }
 
-// STIRNG PARSING
 char		*wc_to_str(int ch)
 {
 	char	*res;
@@ -129,7 +135,22 @@ void		insert_wchar(char **res, int width, size_t ch)
 	free(tmp);
 }
 
-// 31 LINE
+int			get_wchar_width(wchar_t *s)
+{
+	int		width;
+
+	width = 0;
+	if (*s <= 0x7F)
+		width = 1;
+	else if (*s <= 0x7FF)
+		width = 2;
+	else if (*s <= 0xFFFF)
+		width = 3;
+	else if (*s <= 0x1FFFFF)
+		width = 4;
+	return (width);
+}
+
 char		*string_parse(t_pfarg *arg)
 {
 	char	*res;
@@ -146,18 +167,12 @@ char		*string_parse(t_pfarg *arg)
 	s = va_arg(*(arg->argp), wchar_t *);
 	if (!s)
 		return (ft_strdup("(null)"));
-	while (*s != '\0' && (arg->prec == -1 || (arg->prec != -1 && sum_width < arg->prec)))
+	while (*s != '\0' && (arg->prec == -1 || (arg->prec != -1 &&
+		sum_width < arg->prec)))
 	{
-		if (*s <= 0x7F)
-			c_width = 1;
-		else if (*s <= 0x7FF)
-			c_width = 2;
-		else if (*s <= 0xFFFF)
-			c_width = 3;
-		else if (*s <= 0x1FFFFF)
-			c_width = 4;
-		sum_width += c_width;
-		if (is_first || (arg->prec != -1 && sum_width <= arg->prec) || arg->prec == -1)
+		sum_width += (c_width = get_wchar_width(s));
+		if (is_first || (arg->prec != -1 && sum_width <= arg->prec) ||
+			arg->prec == -1)
 			insert_wchar(&res, c_width, *s);
 		is_first = 0;
 		s++;
@@ -167,57 +182,53 @@ char		*string_parse(t_pfarg *arg)
 
 void		parse_arg(t_pfarg *arg)
 {
-	if (1)
+	if (arg->c_type == 'i' || arg->c_type == 'd' || arg->c_type == 'D')
+		arg->cnt = ft_itoa(s_size_parse(arg));
+	else if (arg->c_type == 'o' || arg->c_type == 'O')
+		arg->cnt = ft_uitoa_base(u_size_parse(arg), 8);
+	else if (arg->c_type == 'x' || arg->c_type == 'X')
+		arg->cnt = ft_uitoa_base(u_size_parse(arg), 16);
+	else if (arg->c_type == 'u' || arg->c_type == 'U')
+		arg->cnt = ft_uitoa_base(u_size_parse(arg), 10);
+	else if (arg->c_type == 'c' || arg->c_type == 'C')
+		arg->cnt = char_parse(arg, 0);
+	else if (arg->c_type == 's' || arg->c_type == 'S')
 	{
-		if (arg->c_type == 'i' || arg->c_type == 'd' || arg->c_type == 'D')
-			arg->cnt = ft_itoa(s_size_parse(arg));
-		else if (arg->c_type == 'o' || arg->c_type == 'O')
-			arg->cnt = ft_uitoa_base(u_size_parse(arg), 8);
-		else if (arg->c_type == 'x' || arg->c_type == 'X')
-			arg->cnt = ft_uitoa_base(u_size_parse(arg), 16);
-		else if (arg->c_type == 'u' || arg->c_type == 'U')
-			arg->cnt = ft_uitoa_base(u_size_parse(arg), 10);
-		else if (arg->c_type == 'c' || arg->c_type == 'C')
-			arg->cnt = char_parse(arg, 0);
-		else if (arg->c_type == 's' || arg->c_type == 'S')
-		{
-			arg->cnt = string_parse(arg);
-			arg->cnt = (arg->cnt == NULL) ? ft_strdup("(null)") : arg->cnt;
-		}
-		else if (arg->c_type == '%')
-			arg->cnt = ft_strdup("%");
-		else if (arg->c_type == 'p')
-			arg->cnt = ft_uitoa_base((uintmax_t)va_arg(*(arg->argp), void *), 16);
-		else if (arg->c_type != -1)													// for undefined conversion
-			arg->cnt = char_parse(arg, 1);
+		arg->cnt = string_parse(arg);
+		arg->cnt = (arg->cnt == NULL) ? ft_strdup("(null)") : arg->cnt;
 	}
+	else if (arg->c_type == '%')
+		arg->cnt = ft_strdup("%");
+	else if (arg->c_type == 'p')
+		arg->cnt = ft_uitoa_base((uintmax_t)va_arg(*(arg->argp), void *), 16);
+	else if (arg->c_type != -1)
+		arg->cnt = char_parse(arg, 1);
 }
 
-/*------------------------------*/
-/*		FLAGS_PARSING			*/
-/*______________________________*/
-//	32 LINES
+void		h_size_process(char **str, t_pfarg *arg, int *cur_size)
+{
+	if (**str == 'h' && *(*str + 1) == 'h')
+	{
+		*cur_size = (*cur_size > 1) ? *cur_size : 1;
+		*str = *str + 1;
+	}
+	else if (**str == 'h' && arg->size_flag == 2)
+	{
+		*cur_size = 1;
+		arg->size_flag = 1;
+	}
+	else if (**str == 'h')
+		*cur_size = (*cur_size > 2) ? *cur_size : 2;
+}
+
 int			parse_size_flags(char **str, t_pfarg *arg)
 {
 	int		cur_size;
-	char	*flags;
 
-	flags = ft_strdup("hljz");						// can be global
 	cur_size = 0;
-	while (**str != '\0' && ft_strchr(flags, **str))
+	while (**str != '\0' && ft_strchr("hljz", **str))
 	{
-		if (**str == 'h' && *(*str + 1) == 'h')
-		{
-			cur_size = (cur_size > 1) ? cur_size : 1;
-			*str = *str + 1;
-		}
-		else if (**str == 'h' && arg->size_flag == 2)
-		{
-			cur_size = 1;
-			arg->size_flag = 1;
-		}
-		else if (**str == 'h')
-			cur_size = (cur_size > 2) ? cur_size : 2;
+		h_size_process(str, arg, &cur_size);
 		if (**str == 'l')
 			cur_size = (cur_size > 3) ? cur_size : 3;
 		if (**str == 'l' && *(*str + 1) == 'l')
@@ -233,12 +244,8 @@ int			parse_size_flags(char **str, t_pfarg *arg)
 	return ((cur_size > 0) ? 1 : 0);
 }
 
-//	26 LINES
-int			parse_prec(char **str, t_pfarg *arg)
+int			parse_prec(char **str, t_pfarg *arg, int prec)
 {
-	int		prec;
-
-	prec = -1;
 	if (**str == '.')
 	{
 		prec = 0;
@@ -264,7 +271,6 @@ int			parse_prec(char **str, t_pfarg *arg)
 	return (0);
 }
 
-//	27 LINES
 int			parse_width(char **str, t_pfarg *arg)
 {
 	int		width;
@@ -276,11 +282,8 @@ int			parse_width(char **str, t_pfarg *arg)
 		width = width * 10 + (**str - '0');
 		*str = *str + 1;
 	}
-	if (width > 0)
-	{
-		arg->width = width;
+	if (width > 0 && (arg->width = width))
 		return (1);
-	}
 	if (**str != '\0' && **str == '*')
 	{
 		arg->width = va_arg(*(arg->argp), int);
@@ -292,18 +295,15 @@ int			parse_width(char **str, t_pfarg *arg)
 		*str = *str + 1;
 		return (1);
 	}
-
 	return (0);
 }
 
 int			parse_fmt_flags(char **str, t_pfarg *arg)
 {
-	char	*flags;
 	int		is_found;
 
-	flags = ft_strdup("#0- +");							// can be global
 	is_found = 0;
-	while (**str != '\0' && ft_strchr(flags, **str))
+	while (**str != '\0' && ft_strchr("#0- +", **str))
 	{
 		is_found = 1;
 		if (**str == '#')
@@ -318,19 +318,19 @@ int			parse_fmt_flags(char **str, t_pfarg *arg)
 			arg->fmt_flags = arg->fmt_flags | 1;
 		*str = *str + 1;
 	}
-	if ((arg->fmt_flags & 4) == arg->fmt_flags)			// - overrides 0
+	if ((arg->fmt_flags & 4) == arg->fmt_flags)
 		arg->fmt_flags = arg->fmt_flags & 23;
-	if ((arg->fmt_flags & 1) == arg->fmt_flags)			// + overrides space
+	if ((arg->fmt_flags & 1) == arg->fmt_flags)
 		arg->fmt_flags = arg->fmt_flags & 29;
 	return (is_found);
 }
 
-void		parse_conv(char **str, t_pfarg *arg)		// how to understand if there is no correct type flag??
+void		parse_conv(char **str, t_pfarg *arg)
 {
-	if (**str != '\0')										// CHECK FOR THE END OF STRING
+	if (**str != '\0')
 	{
 		arg->c_type = **str;
-		if (arg->c_type == 'U' || arg->c_type == 'D' || arg->c_type == 'O')				// ADDING SIZE L IF IT IS U CONVERSION
+		if (arg->c_type == 'U' || arg->c_type == 'D' || arg->c_type == 'O')
 			arg->size_flag = (arg->size_flag > 3) ? arg->size_flag : 3;
 		if (arg->c_type == 'C' || arg->c_type == 'S')
 			arg->size_flag = 3;
@@ -340,7 +340,6 @@ void		parse_conv(char **str, t_pfarg *arg)		// how to understand if there is no 
 
 void		free_structure(t_pfarg *arg)
 {
-	//if (arg->c_type != 's' && arg->c_type != 'S')
 	free(arg->cnt);
 	arg->cnt = NULL;
 	arg->argp = NULL;
@@ -348,40 +347,41 @@ void		free_structure(t_pfarg *arg)
 	arg = NULL;
 }
 
-void		struct_parse(char **str, va_list *ap, int *b_printed)
+void		struct_init(t_pfarg *arg, va_list *ap)
 {
-	t_pfarg		*arg;
-
-	arg = (t_pfarg*)malloc(sizeof(t_pfarg));		// check for malloc
-	
-	// STRUCTURE_INIT
 	arg->cnt = NULL;
 	arg->fmt_flags = 0;
-	arg->width = 0;									// default width
-	arg->prec = -1;									// default prec
+	arg->width = 0;
+	arg->prec = -1;
 	arg->size_flag = 0;
 	arg->c_type = -1;
 	arg->is_zero_char = 0;
 	arg->cnt_len = 0;
 	arg->argp = ap;
+}
+
+void		struct_parse(char **str, va_list *ap, int *b_printed)
+{
+	t_pfarg		*arg;
+
+	arg = (t_pfarg*)malloc(sizeof(t_pfarg));
 	*str = *str + 1;
-
-	// STRUCTURE FILL
-	while (**str && (parse_fmt_flags(str, arg) ||
-		parse_width(str, arg) || parse_prec(str, arg) || 
-		parse_size_flags(str, arg)))
+	if (arg)
 	{
-		// READING FLAGS
+		struct_init(arg, ap);
+		while (**str && (parse_fmt_flags(str, arg) ||
+			parse_width(str, arg) || parse_prec(str, arg, -1) ||
+			parse_size_flags(str, arg)))
+		{
+		}
+		parse_conv(str, arg);
+		parse_arg(arg);
+		if (arg->cnt)
+		{
+			common_format(arg);
+			ft_pfputstr(arg);
+			*b_printed += ft_strlen(arg->cnt) + arg->cnt_len;
+		}
+		free_structure(arg);
 	}
-	parse_conv(str, arg);
-	parse_arg(arg);
-
-	// STRUCTURE PROCESS
-	if (arg->cnt)
-	{
-		common_format(arg);
-		ft_pfputstr(arg);
-		*b_printed += ft_strlen(arg->cnt) + arg->cnt_len;
-	}
-	free_structure(arg);
 }

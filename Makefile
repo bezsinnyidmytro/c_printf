@@ -15,8 +15,9 @@ NAME = libftprintf.a
 SRC = 	ft_printf.c \
 		itoa_base.c \
 		arg_struct_parse.c \
-		printf_format_test.c \
+		format_controller.c \
 		printf_formats.c \
+		zero_minus_flags.c \
 		ft_itoa.c \
 		ft_strnew.c \
 		libft_func_01.c \
@@ -24,6 +25,8 @@ SRC = 	ft_printf.c \
 
 OBJ = $(SRC:.c=.o)
 FLAGS = -Wall -Werror -Wextra
+
+# norminette ft_printf.c itoa_base.c arg_struct_parse.c format_controller.c printf_formats.c zero_minus_flags.c ft_itoa.c ft_strnew.c libft_func_01.c libft_func_02.c
 
 all: $(NAME)
 
