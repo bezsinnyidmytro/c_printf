@@ -33,7 +33,17 @@ typedef struct		s_pfarg
 }					t_pfarg;
 
 int					ft_printf(char *str, ...);
+
 void				struct_parse(char **str, va_list *ap, int *b_printed);
+int					parse_size_flags(char **str, t_pfarg *arg);
+int					parse_prec(char **str, t_pfarg *arg, int prec);
+int					parse_width(char **str, t_pfarg *arg);
+int					parse_fmt_flags(char **str, t_pfarg *arg);
+
+size_t				s_size_parse(t_pfarg *arg);
+size_t				u_size_parse(t_pfarg *arg);
+char				*string_parse(t_pfarg *arg);
+char				*char_parse(t_pfarg *arg, int udef_flag);
 
 char				*pre_format(t_pfarg *arg);
 void				prec_format(t_pfarg *arg, char **end_content);
