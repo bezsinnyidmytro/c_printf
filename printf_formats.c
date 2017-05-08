@@ -1,5 +1,21 @@
 #include "ft_printf.h"
 
+char	*pre_format(t_pfarg *arg)
+{
+	// p
+	if (arg->cnt[0] == '0' && arg->prec == 0 && ft_strchr("pdiDoOuUxX", arg->c_type))
+		arg->cnt[0] = '\0';
+	else if (arg->cnt[0] == '0' && (arg->c_type == 'x' || arg->c_type == 'X'))
+		arg->fmt_flags = (arg->fmt_flags & 15);
+	else if (arg->cnt[0] == '\0' && (arg->c_type == 'c' || arg->c_type == 'C'))
+	{
+		arg->width--;
+		arg->cnt_len += 1;
+		arg->is_zero_char = 1;
+	}
+	return (ft_strdup(arg->cnt));
+}
+
 void	prec_format(t_pfarg *arg, char **end_content)
 {
 	int		p_len;
@@ -36,6 +52,24 @@ void	prec_format(t_pfarg *arg, char **end_content)
 		*end_content = ft_strjoin(tmp, *end_content);
 		free(tmp);
 	}
+}
+
+void	signed_sign_format(t_pfarg *arg, char **end_content)
+{
+	if ((arg->fmt_flags & 1) == 1 && (*end_content)[0] != '-')
+		*end_content = ft_strjoin("+", *end_content);
+	else if ((arg->fmt_flags & 2) == 2 && (*end_content)[0] != '-')
+		*end_content = ft_strjoin(" ", *end_content);
+}
+
+void	hash_format(t_pfarg *arg, char **end_content)
+{
+	if (arg->c_type == 'p')
+		*end_content = ft_strjoin("0x", *end_content);
+	else if ((arg->c_type == 'o' || arg->c_type == 'O') && (*end_content)[0] != '0' && (arg->fmt_flags & 16) == 16)
+		*end_content = ft_strjoin("0", *end_content);
+	else if ((arg->c_type == 'x' || arg->c_type == 'X') && (arg->fmt_flags & 16) == 16 && (arg->prec != 0 || arg->cnt[0] != '\0'))
+		*end_content = ft_strjoin("0x", *end_content);
 }
 
 static int	is_zpad_c(char ch)

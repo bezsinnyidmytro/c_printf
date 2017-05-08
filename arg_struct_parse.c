@@ -139,13 +139,13 @@ char		*string_parse(t_pfarg *arg)
 	int		is_first;
 
 	if (arg->size_flag != 3)
-		return (va_arg(*(arg->argp), char *));
+		return (ft_strdup(va_arg(*(arg->argp), char *)));
 	sum_width = 0;
 	is_first = 1;
 	res = ft_strnew(0);
 	s = va_arg(*(arg->argp), wchar_t *);
 	if (!s)
-		return ("(null)");
+		return (ft_strdup("(null)"));
 	while (*s != '\0' && (arg->prec == -1 || (arg->prec != -1 && sum_width < arg->prec)))
 	{
 		if (*s <= 0x7F)
@@ -182,7 +182,7 @@ void		parse_arg(t_pfarg *arg)
 		else if (arg->c_type == 's' || arg->c_type == 'S')
 		{
 			arg->cnt = string_parse(arg);
-			arg->cnt = (arg->cnt == NULL) ? "(null)" : arg->cnt;
+			arg->cnt = (arg->cnt == NULL) ? ft_strdup("(null)") : arg->cnt;
 		}
 		else if (arg->c_type == '%')
 			arg->cnt = ft_strdup("%");
@@ -340,8 +340,8 @@ void		parse_conv(char **str, t_pfarg *arg)		// how to understand if there is no 
 
 void		free_structure(t_pfarg *arg)
 {
-	if (arg->c_type != 's' && arg->c_type != 'S')
-		free(arg->cnt);
+	//if (arg->c_type != 's' && arg->c_type != 'S')
+	free(arg->cnt);
 	arg->cnt = NULL;
 	arg->argp = NULL;
 	free(arg);
@@ -379,24 +379,7 @@ void		struct_parse(char **str, va_list *ap, int *b_printed)
 	// STRUCTURE PROCESS
 	if (arg->cnt)
 	{
-		if (arg->c_type == 'u' || arg->c_type == 'U')
-			uU_format(arg);
-		else if (arg->c_type == 'o' || arg->c_type == 'O')
-			oO_format(arg);
-		else if (arg->c_type == 'x' || arg->c_type == 'X')
-			xX_format(arg);
-		else if (arg->c_type == 'i' || arg->c_type == 'd' || arg->c_type == 'D')
-			diD_format(arg);
-		else if (arg->c_type == '%')
-			percent_format(arg);
-		else if (arg->c_type == 'c' || arg->c_type == 'C')
-			cC_format(arg);
-		else if (arg->c_type == 's' || arg->c_type == 'S')
-			str_format(arg);
-		else if (arg->c_type == 'p')
-			p_format(arg);
-		else
-			cC_format(arg);	// for undefined conversions
+		common_format(arg);
 		ft_pfputstr(arg);
 		*b_printed += ft_strlen(arg->cnt) + arg->cnt_len;
 	}

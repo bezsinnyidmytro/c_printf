@@ -35,6 +35,11 @@ void				p_format(t_pfarg *arg);
 void				cC_format(t_pfarg *arg);
 void				prec_format(t_pfarg *arg, char **end_content);
 void				zero_minus_format(t_pfarg *arg, char **end_content);
+char				*pre_format(t_pfarg *arg);
+void				hash_format(t_pfarg *arg, char **end_content);
+void				signed_sign_format(t_pfarg *arg, char **end_content);
+
+void				common_format(t_pfarg *arg);
 
 /*	LIBFT FUNCTIONS	*/
 char				*ft_strnew(size_t size);

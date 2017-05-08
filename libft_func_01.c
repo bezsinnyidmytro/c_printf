@@ -65,6 +65,8 @@ char	*ft_strdup(const char *s1)
 	char				*str_new;
 	int					i;
 
+	if (!s1)
+		return (NULL);
 	i = 0;
 	size = ft_strlen(s1);
 	str_new = ft_strnew(size);
