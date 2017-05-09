@@ -34,11 +34,12 @@ typedef struct		s_pfarg
 
 int					ft_printf(const char *str, ...);
 
-void				struct_parse(char **str, va_list *ap, int *b_printed);
-int					parse_size_flags(char **str, t_pfarg *arg);
-int					parse_prec(char **str, t_pfarg *arg, int prec);
-int					parse_width(char **str, t_pfarg *arg);
-int					parse_fmt_flags(char **str, t_pfarg *arg);
+void				struct_parse(const char **str, va_list *ap,
+								size_t *b_printed);
+int					parse_size_flags(const char **str, t_pfarg *arg);
+int					parse_prec(const char **str, t_pfarg *arg, int prec);
+int					parse_width(const char **str, t_pfarg *arg);
+int					parse_fmt_flags(const char **str, t_pfarg *arg);
 
 size_t				s_size_parse(t_pfarg *arg);
 size_t				u_size_parse(t_pfarg *arg);

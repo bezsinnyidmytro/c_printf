@@ -12,7 +12,7 @@
 
 #include "ft_printf.h"
 
-static void	h_size_process(char **str, t_pfarg *arg, int *cur_size)
+static void	h_size_process(const char **str, t_pfarg *arg, int *cur_size)
 {
 	if (**str == 'h' && *(*str + 1) == 'h')
 	{
@@ -28,7 +28,7 @@ static void	h_size_process(char **str, t_pfarg *arg, int *cur_size)
 		*cur_size = (*cur_size > 2) ? *cur_size : 2;
 }
 
-int			parse_size_flags(char **str, t_pfarg *arg)
+int			parse_size_flags(const char **str, t_pfarg *arg)
 {
 	int		cur_size;
 
@@ -51,7 +51,7 @@ int			parse_size_flags(char **str, t_pfarg *arg)
 	return ((cur_size > 0) ? 1 : 0);
 }
 
-int			parse_prec(char **str, t_pfarg *arg, int prec)
+int			parse_prec(const char **str, t_pfarg *arg, int prec)
 {
 	if (**str == '.')
 	{
@@ -78,7 +78,7 @@ int			parse_prec(char **str, t_pfarg *arg, int prec)
 	return (0);
 }
 
-int			parse_width(char **str, t_pfarg *arg)
+int			parse_width(const char **str, t_pfarg *arg)
 {
 	int		width;
 
@@ -105,7 +105,7 @@ int			parse_width(char **str, t_pfarg *arg)
 	return (0);
 }
 
-int			parse_fmt_flags(char **str, t_pfarg *arg)
+int			parse_fmt_flags(const char **str, t_pfarg *arg)
 {
 	int		is_found;
 

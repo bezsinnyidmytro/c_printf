@@ -37,7 +37,7 @@ void		parse_arg(t_pfarg *arg)
 		arg->cnt = char_parse(arg, 1);
 }
 
-void		parse_conv(char **str, t_pfarg *arg)
+void		parse_conv(const char **str, t_pfarg *arg)
 {
 	if (**str != '\0')
 	{
@@ -72,7 +72,7 @@ void		struct_init(t_pfarg *arg, va_list *ap)
 	arg->argp = ap;
 }
 
-void		struct_parse(char **str, va_list *ap, int *b_printed)
+void		struct_parse(const char **str, va_list *ap, size_t *b_printed)
 {
 	t_pfarg		*arg;
 
