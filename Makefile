@@ -12,21 +12,27 @@
 
 NAME = libftprintf.a
 
-SRC = 	ft_printf.c \
-		itoa_base.c \
-		arg_struct_parse.c \
-		format_flags_parser.c \
-		char_str_arg_parser.c \
-		numeric_arg_parser.c \
-		format_controller.c \
-		printf_formats.c \
-		zero_minus_flags.c \
-		ft_itoa.c \
-		ft_strnew.c \
-		libft_func_01.c \
-		libft_func_02.c
+PRINTF_DIR =	printf_src/
+PRINTF_FILES =	ft_printf.c \
+				arg_struct_parse.c \
+				numeric_arg_parser.c \
+				format_flags_parser.c \
+				char_str_arg_parser.c \
+				format_controller.c \
+				printf_formats.c \
+				zero_minus_flags.c
+PRINTF_SRC =	$(addprefix $(PRINTF_DIR), $(PRINTF_FILES))
 
-OBJ = $(SRC:.c=.o)
+LIBFT_DIR =		libft_src/
+LIBFT_FILES = 	itoa_base.c \
+				ft_itoa.c \
+				ft_strnew.c \
+				libft_func_01.c \
+				libft_func_02.c
+LIBFT_SRC = 	$(addprefix $(LIBFT_DIR), $(LIBFT_FILES))
+
+SRC =	$(PRINTF_SRC) $(LIBFT_SRC)
+OBJ =	$(SRC:.c=.o)
 FLAGS = -Wall -Werror -Wextra
 
 all: $(NAME)
