@@ -32,7 +32,7 @@ typedef struct		s_pfarg
 	va_list			*argp;
 }					t_pfarg;
 
-int					ft_printf(char *str, ...);
+int					ft_printf(const char *str, ...);
 
 void				struct_parse(char **str, va_list *ap, int *b_printed);
 int					parse_size_flags(char **str, t_pfarg *arg);

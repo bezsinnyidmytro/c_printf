@@ -12,10 +12,10 @@
 
 #include "ft_printf.h"
 
-int				ft_printf(char *str, ...)
+int				ft_printf(const char *str, ...)
 {
 	va_list		argp;
-	int			b_printed;
+	size_t		b_printed;
 
 	b_printed = 0;
 	va_start(argp, str);
@@ -31,5 +31,7 @@ int				ft_printf(char *str, ...)
 			struct_parse(&str, &argp, &b_printed);
 	}
 	va_end(argp);
+	if (b_printed > 2147483647)
+		return (-1);
 	return (b_printed);
 }
