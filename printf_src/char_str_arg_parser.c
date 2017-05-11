@@ -41,25 +41,25 @@ static void	insert_wchar(char **res, int width, size_t ch)
 
 	tmp = ft_strnew(0);
 	if (width == 1)
-		tmp = ft_strjoin(tmp, wc_to_str(ch));
+		tmp = ft_dstrjoin(tmp, wc_to_str(ch), 1, 1);
 	else
 	{
 		if (width == 2)
-			tmp = ft_strjoin(tmp, wc_to_str((ch >> 6) + 192));
+			tmp = ft_dstrjoin(tmp, wc_to_str((ch >> 6) + 192), 1, 1);
 		else if (width == 3)
 		{
-			tmp = ft_strjoin(tmp, wc_to_str((ch >> 12) + 224));
-			tmp = ft_strjoin(tmp, wc_to_str(((ch >> 6) & 63) + 128));
+			tmp = ft_dstrjoin(tmp, wc_to_str((ch >> 12) + 224), 1, 1);
+			tmp = ft_dstrjoin(tmp, wc_to_str(((ch >> 6) & 63) + 128), 1, 1);
 		}
 		else if (width == 4)
 		{
-			tmp = ft_strjoin(tmp, wc_to_str((ch >> 18) + 240));
-			tmp = ft_strjoin(tmp, wc_to_str(((ch >> 12) & 63) + 192));
-			tmp = ft_strjoin(tmp, wc_to_str(((ch >> 6) & 63) + 128));
+			tmp = ft_dstrjoin(tmp, wc_to_str((ch >> 18) + 240), 1, 1);
+			tmp = ft_dstrjoin(tmp, wc_to_str(((ch >> 12) & 63) + 192), 1, 1);
+			tmp = ft_dstrjoin(tmp, wc_to_str(((ch >> 6) & 63) + 128), 1, 1);
 		}
-		tmp = ft_strjoin(tmp, wc_to_str((ch & 63) + 128));
+		tmp = ft_dstrjoin(tmp, wc_to_str((ch & 63) + 128), 1, 1);
 	}
-	*res = ft_strjoin(*res, tmp);
+	*res = ft_dstrjoin(*res, tmp, 1, 0);
 	free(tmp);
 }
 

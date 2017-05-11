@@ -63,7 +63,7 @@ char				*ft_strdup(const char *s1);
 char				*ft_strndup(const char *s1, unsigned int n);
 void				ft_pfputstr(t_pfarg *arg);
 void				ft_putchar(char ch);
-char				*ft_strjoin(char const *s1, char const *s2);
+char				*ft_dstrjoin(char *s1, char *s2, int ff1, int ff2);
 char				*ft_strcat(char *s1, const char *s2);
 void				ft_strcap(char *str);
 void				ft_swap_chars(char *a, char *b);

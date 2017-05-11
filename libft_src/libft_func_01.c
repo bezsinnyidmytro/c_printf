@@ -17,7 +17,7 @@ void	ft_putchar(char ch)
 	write(1, &ch, 1);
 }
 
-char	*ft_strjoin(char const *s1, char const *s2)
+char	*ft_dstrjoin(char *s1, char *s2, int ff1, int ff2)
 {
 	size_t	len;
 	char	*str_new;
@@ -30,6 +30,10 @@ char	*ft_strjoin(char const *s1, char const *s2)
 		return (NULL);
 	str_new = ft_strcat(str_new, s1);
 	str_new = ft_strcat(str_new, s2);
+	if (ff1)
+		free(s1);
+	if (ff2)
+		free(s2);
 	return (str_new);
 }
 

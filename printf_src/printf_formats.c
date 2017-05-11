@@ -65,7 +65,7 @@ void		prec_format(t_pfarg *arg, char **end_content)
 		}
 		while (++i < p_len)
 			tmp[i] = '0';
-		*end_content = ft_strjoin(tmp, *end_content);
+		*end_content = ft_dstrjoin(tmp, *end_content, 0, 1);
 		free(tmp);
 	}
 }
@@ -73,19 +73,19 @@ void		prec_format(t_pfarg *arg, char **end_content)
 void		signed_sign_format(t_pfarg *arg, char **end_content)
 {
 	if ((arg->fmt_flags & 1) == 1 && (*end_content)[0] != '-')
-		*end_content = ft_strjoin("+", *end_content);
+		*end_content = ft_dstrjoin("+", *end_content, 0, 1);
 	else if ((arg->fmt_flags & 2) == 2 && (*end_content)[0] != '-')
-		*end_content = ft_strjoin(" ", *end_content);
+		*end_content = ft_dstrjoin(" ", *end_content, 0, 1);
 }
 
 void		hash_format(t_pfarg *arg, char **end_content)
 {
 	if (arg->c_type == 'p')
-		*end_content = ft_strjoin("0x", *end_content);
+		*end_content = ft_dstrjoin("0x", *end_content, 0, 1);
 	else if ((arg->c_type == 'o' || arg->c_type == 'O') &&
 		(*end_content)[0] != '0' && (arg->fmt_flags & 16) == 16)
-		*end_content = ft_strjoin("0", *end_content);
+		*end_content = ft_dstrjoin("0", *end_content, 0, 1);
 	else if ((arg->c_type == 'x' || arg->c_type == 'X') &&
 		(arg->fmt_flags & 16) == 16 && (arg->prec != 0 || arg->cnt[0] != '\0'))
-		*end_content = ft_strjoin("0x", *end_content);
+		*end_content = ft_dstrjoin("0x", *end_content, 0, 1);
 }

@@ -28,7 +28,7 @@ static void	left_side(int width, int c_len, char **end_content)
 	i = -1;
 	while (++i < width - c_len)
 		tmp[i] = ' ';
-	*end_content = ft_strjoin(*end_content, tmp);
+	*end_content = ft_dstrjoin(*end_content, tmp, 1, 0);
 	free(tmp);
 }
 
@@ -53,7 +53,7 @@ static void	right_side(t_pfarg *arg, char **end_content, int c_len)
 		tmp[0] = (*end_content)[0];
 		(*end_content)[0] = '0';
 	}
-	*end_content = ft_strjoin(tmp, *end_content);
+	*end_content = ft_dstrjoin(tmp, *end_content, 0, 1);
 	if (z_flag && (arg->c_type == 'p' || ((arg->c_type == 'x' ||
 		arg->c_type == 'X') && (arg->fmt_flags & 16) == 16)))
 		(*end_content)[1] = 'x';
