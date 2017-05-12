@@ -22,6 +22,8 @@ void		parse_arg(t_pfarg *arg)
 		arg->cnt = ft_uitoa_base(u_size_parse(arg), 16);
 	else if (arg->c_type == 'u' || arg->c_type == 'U')
 		arg->cnt = ft_uitoa_base(u_size_parse(arg), 10);
+	else if (arg->c_type == 'b')
+		arg->cnt = ft_uitoa_base(u_size_parse(arg), 2);
 	else if (arg->c_type == 'c' || arg->c_type == 'C')
 		arg->cnt = char_parse(arg, 0);
 	else if (arg->c_type == 's' || arg->c_type == 'S')

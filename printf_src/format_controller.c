@@ -24,7 +24,7 @@ void	common_format(t_pfarg *arg)
 	char	*end_content;
 
 	end_content = pre_format(arg);
-	if (ft_strchr("pdiDoOuUxXsS", arg->c_type))
+	if (ft_strchr("pdiDoOuUxXbsS", arg->c_type))
 		prec_format(arg, &end_content);
 	if (is_signed_conv(arg->c_type))
 		signed_sign_format(arg, &end_content);

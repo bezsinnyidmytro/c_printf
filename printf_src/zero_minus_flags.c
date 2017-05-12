@@ -14,7 +14,7 @@
 
 static int	is_zpad_c(char ch)
 {
-	if (ft_strchr("diDoOuUxXp", ch))
+	if (ft_strchr("diDoOuUxXpb", ch))
 		return (0);
 	return (1);
 }

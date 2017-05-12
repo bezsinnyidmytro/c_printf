@@ -21,7 +21,7 @@ static size_t	udef_size_parse(t_pfarg *arg)
 		parsed_arg = va_arg(*(arg->argp), unsigned int);
 	else if (arg->c_type == 'x' || arg->c_type == 'X')
 		parsed_arg = va_arg(*(arg->argp), unsigned int);
-	else if (arg->c_type == 'u')
+	else if (arg->c_type == 'u' || arg->c_type == 'b')
 		parsed_arg = va_arg(*(arg->argp), unsigned int);
 	else if (arg->c_type == 'U')
 		parsed_arg = va_arg(*(arg->argp), unsigned long int);

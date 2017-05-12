@@ -15,7 +15,7 @@
 char		*pre_format(t_pfarg *arg)
 {
 	if (arg->cnt[0] == '0' && arg->prec == 0 &&
-		ft_strchr("pdiDoOuUxX", arg->c_type))
+		ft_strchr("pdiDoOuUxXb", arg->c_type))
 		arg->cnt[0] = '\0';
 	else if (arg->cnt[0] == '0' && (arg->c_type == 'x' || arg->c_type == 'X'))
 		arg->fmt_flags = (arg->fmt_flags & 15);
