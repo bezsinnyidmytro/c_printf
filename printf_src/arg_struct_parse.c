@@ -35,11 +35,11 @@ void		parse_arg(t_pfarg *arg)
 		arg->cnt = ft_strdup("%");
 	else if (arg->c_type == 'p')
 		arg->cnt = ft_uitoa_base((uintmax_t)va_arg(*(arg->argp), void *), 16);
-	else if (arg->c_type != -1)
+	else if (arg->c_type != -1 && arg->c_type != 'n')
 		arg->cnt = char_parse(arg, 1);
 }
 
-void		parse_conv(const char **str, t_pfarg *arg)
+void		parse_conv(const char **str, t_pfarg *arg, size_t *b_printed)
 {
 	if (**str != '\0')
 	{
@@ -48,6 +48,8 @@ void		parse_conv(const char **str, t_pfarg *arg)
 			arg->size_flag = (arg->size_flag > 3) ? arg->size_flag : 3;
 		if (arg->c_type == 'C' || arg->c_type == 'S')
 			arg->size_flag = 3;
+		if (arg->c_type == 'n')
+			*(va_arg(*(arg->argp), size_t *)) = *b_printed;
 		*str = *str + 1;
 	}
 }
@@ -88,7 +90,7 @@ void		struct_parse(const char **str, va_list *ap, size_t *b_printed)
 			parse_size_flags(str, arg)))
 		{
 		}
-		parse_conv(str, arg);
+		parse_conv(str, arg, b_printed);
 		parse_arg(arg);
 		if (arg->cnt)
 		{
