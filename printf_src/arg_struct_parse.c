@@ -35,6 +35,8 @@ void		parse_arg(t_pfarg *arg)
 		arg->cnt = ft_strdup("%");
 	else if (arg->c_type == 'p')
 		arg->cnt = ft_uitoa_base((uintmax_t)va_arg(*(arg->argp), void *), 16);
+	else if (arg->c_type == 'f' || arg->c_type == 'F')
+		arg->cnt = ft_ftoa(va_arg(*(arg->argp), double), arg->prec);
 	else if (arg->c_type != -1 && arg->c_type != 'n')
 		arg->cnt = char_parse(arg, 1);
 }
@@ -56,7 +58,8 @@ void		parse_conv(const char **str, t_pfarg *arg, size_t *b_printed)
 
 void		free_structure(t_pfarg *arg)
 {
-	free(arg->cnt);
+	if (arg->cnt)
+		free(arg->cnt);
 	arg->cnt = NULL;
 	arg->argp = NULL;
 	free(arg);
@@ -76,7 +79,8 @@ void		struct_init(t_pfarg *arg, va_list *ap)
 	arg->argp = ap;
 }
 
-void		struct_parse(const char **str, va_list *ap, size_t *b_printed)
+void		struct_parse(const char **str, va_list *ap, size_t *b_printed,
+						int fd)
 {
 	t_pfarg		*arg;
 
@@ -95,7 +99,7 @@ void		struct_parse(const char **str, va_list *ap, size_t *b_printed)
 		if (arg->cnt)
 		{
 			common_format(arg);
-			ft_pfputstr(arg);
+			ft_pfputstr(arg, fd);
 			*b_printed += ft_strlen(arg->cnt) + arg->cnt_len;
 		}
 		free_structure(arg);

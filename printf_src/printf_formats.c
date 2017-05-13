@@ -88,4 +88,7 @@ void		hash_format(t_pfarg *arg, char **end_content)
 	else if ((arg->c_type == 'x' || arg->c_type == 'X') &&
 		(arg->fmt_flags & 16) == 16 && (arg->prec != 0 || arg->cnt[0] != '\0'))
 		*end_content = ft_dstrjoin("0x", *end_content, 0, 1);
+	else if ((arg->c_type == 'f' || arg->c_type == 'F')
+		&& !(ft_strchr(*end_content, '.')) && (arg->fmt_flags & 16) == 16)
+		*end_content = ft_dstrjoin(*end_content, ".", 1, 0);
 }

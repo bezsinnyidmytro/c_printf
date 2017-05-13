@@ -14,7 +14,7 @@
 
 int		is_signed_conv(char ch)
 {
-	if (ft_strchr("diD", ch))
+	if (ft_strchr("diDfF", ch))
 		return (1);
 	return (0);
 }

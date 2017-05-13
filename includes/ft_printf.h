@@ -35,7 +35,7 @@ typedef struct		s_pfarg
 int					ft_printf(const char *str, ...);
 
 void				struct_parse(const char **str, va_list *ap,
-								size_t *b_printed);
+								size_t *b_printed, int fd);
 int					parse_size_flags(const char **str, t_pfarg *arg);
 int					parse_prec(const char **str, t_pfarg *arg, int prec);
 int					parse_width(const char **str, t_pfarg *arg);
@@ -45,6 +45,7 @@ size_t				s_size_parse(t_pfarg *arg);
 size_t				u_size_parse(t_pfarg *arg);
 char				*string_parse(t_pfarg *arg);
 char				*char_parse(t_pfarg *arg, int udef_flag);
+long double			ft_round_fraction(long double t);
 
 char				*pre_format(t_pfarg *arg);
 void				prec_format(t_pfarg *arg, char **end_content);
@@ -61,11 +62,13 @@ char				*ft_strchr(const char *s, int c);
 unsigned long int	ft_strlen(const char *str);
 char				*ft_strdup(const char *s1);
 char				*ft_strndup(const char *s1, unsigned int n);
-void				ft_pfputstr(t_pfarg *arg);
-void				ft_putchar(char ch);
+void				ft_pfputstr(t_pfarg *arg, int fd);
+void				ft_fdputchar(char ch, int fd);
 char				*ft_dstrjoin(char *s1, char *s2, int ff1, int ff2);
 char				*ft_strcat(char *s1, const char *s2);
 void				ft_strcap(char *str);
 void				ft_swap_chars(char *a, char *b);
+char				*ft_ftoa(long double val, int prec);
+int					*parse_values(int a, int b, int c);
 
 #endif

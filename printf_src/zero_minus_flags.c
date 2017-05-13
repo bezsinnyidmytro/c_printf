@@ -48,7 +48,7 @@ static void	right_side(t_pfarg *arg, char **end_content, int c_len)
 	while (++i < arg->width - c_len)
 		tmp[i] = z_flag ? '0' : ' ';
 	if (z_flag && ft_strchr(" -+", (*end_content)[0]) &&
-		ft_strchr("diD", arg->c_type))
+		ft_strchr("diDfF", arg->c_type))
 	{
 		tmp[0] = (*end_content)[0];
 		(*end_content)[0] = '0';

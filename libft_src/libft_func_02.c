@@ -41,27 +41,27 @@ unsigned long int	ft_strlen(const char *str)
 	return (len);
 }
 
-static void			ft_putstr(char const *str)
+static void			ft_fdputstr(char const *str, int fd)
 {
 	if (!str)
 		return ;
 	while (*str)
 	{
-		ft_putchar(*str);
+		ft_fdputchar(*str, fd);
 		str++;
 	}
 }
 
-void				ft_pfputstr(t_pfarg *arg)
+void				ft_pfputstr(t_pfarg *arg, int fd)
 {
 	char	ch;
 
 	ch = '\0';
 	if (arg->is_zero_char == 1 && (arg->fmt_flags & 4) == 4)
-		write(1, &ch, 1);
-	ft_putstr(arg->cnt);
+		write(fd, &ch, 1);
+	ft_fdputstr(arg->cnt, fd);
 	if (arg->is_zero_char == 1 && (arg->fmt_flags | 4) != arg->fmt_flags)
-		write(1, &ch, 1);
+		write(fd, &ch, 1);
 }
 
 void				ft_swap_chars(char *a, char *b)

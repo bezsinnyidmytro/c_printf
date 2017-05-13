@@ -12,9 +12,9 @@
 
 #include "../includes/ft_printf.h"
 
-void	ft_putchar(char ch)
+void	ft_fdputchar(char ch, int fd)
 {
-	write(1, &ch, 1);
+	write(fd, &ch, 1);
 }
 
 char	*ft_dstrjoin(char *s1, char *s2, int ff1, int ff2)
