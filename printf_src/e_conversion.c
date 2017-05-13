@@ -14,37 +14,24 @@
 
 #include "../includes/ft_printf.h"
 
-static void		set_start_expo(int *expo, long double val)
-{
-	*expo = 0;
-	if ((val > 0 && val < 1.0) || (val < 0 && val > -1.0))
-		*expo = -1;
-	else if ((val > 0 && val >= 10.0) || (val > 0 && val <= -10.0))
-		*expo = 1;
-}
-
 static void		get_expo(int *expo, long double *val)
 {
-	set_start_expo(expo, *val);
-	if (*val > 0 && *val < 1.0)
+	*expo = 0;
+	if ((*val < 0 && ABS(*val) > 1.0) || (*val > 0 && ABS(*val) > 1.0))
 	{
-		while ((*val = *val * 10) < 1.0)
-			(*expo)--;
-	}
-	else if (*val > 0 && *val > 1.0)
-	{
-		while ((*val = *val / 10) > 10)
+		while (ABS(*val) >= 10.0)
+		{
 			(*expo)++;
+			*val = *val / 10.0;
+		}
 	}
-	else if (*val < 0 && *val > -1.0)
+	else if ((*val < 0 && ABS(*val) < 1) || (*val > 0 && ABS(*val) < 1))
 	{
-		while ((*val = *val * 10) > -1.0)
+		while (ABS(*val) < 1.0)
+		{
 			(*expo)--;
-	}
-	else if (*val < 0 && *val < -1.0)
-	{
-		while ((*val = *val / 10) < -10)
-			(*expo)++;
+			*val = *val * 10.0;
+		}
 	}
 }
 
@@ -71,12 +58,10 @@ char			*ft_etoa(long double val, int prec)
 	int			mult_flag;
 
 	mult_flag = 0;
-	if ((val > 0 && val < 10) || (val < 0 && val > -10))
-		mult_flag = 1;
 	if (prec == -1)
 		prec = 6;
 	get_expo(&expo, &val);
-	val = mult_flag ? val * 10 : val;
+	val = (mult_flag == 1) ? val * 10 : val;
 	res = ft_ftoa(val, prec);
 	str_expo = expo_to_str(expo);
 	res = ft_dstrjoin(res, str_expo, 1, 1);
