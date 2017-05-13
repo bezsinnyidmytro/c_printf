@@ -68,10 +68,15 @@ char			*ft_etoa(long double val, int prec)
 	int			expo;
 	char		*res;
 	char		*str_expo;
+	int			mult_flag;
 
+	mult_flag = 0;
+	if ((val > 0 && val < 10) || (val < 0 && val > -10))
+		mult_flag = 1;
 	if (prec == -1)
-		prec = 3;
+		prec = 6;
 	get_expo(&expo, &val);
+	val = mult_flag ? val * 10 : val;
 	res = ft_ftoa(val, prec);
 	str_expo = expo_to_str(expo);
 	res = ft_dstrjoin(res, str_expo, 1, 1);
