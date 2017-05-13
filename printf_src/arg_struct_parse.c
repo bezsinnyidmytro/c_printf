@@ -35,8 +35,8 @@ void		parse_arg(t_pfarg *arg)
 		arg->cnt = ft_strdup("%");
 	else if (arg->c_type == 'p')
 		arg->cnt = ft_uitoa_base((uintmax_t)va_arg(*(arg->argp), void *), 16);
-	else if (arg->c_type == 'f' || arg->c_type == 'F')
-		arg->cnt = ft_ftoa(va_arg(*(arg->argp), double), arg->prec);
+	else if (ft_strchr("fFeE", arg->c_type))
+		arg->cnt = fe_dispatcher(arg);
 	else if (arg->c_type != -1 && arg->c_type != 'n')
 		arg->cnt = char_parse(arg, 1);
 }

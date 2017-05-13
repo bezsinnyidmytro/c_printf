@@ -14,7 +14,7 @@
 
 int		is_signed_conv(char ch)
 {
-	if (ft_strchr("diDfF", ch))
+	if (ft_strchr("diDfFeE", ch))
 		return (1);
 	return (0);
 }
@@ -31,7 +31,7 @@ void	common_format(t_pfarg *arg)
 	hash_format(arg, &end_content);
 	zero_minus_format(arg, &end_content);
 	free(arg->cnt);
-	if (arg->c_type == 'X')
+	if (arg->c_type == 'X' || arg->c_type == 'E')
 		ft_strcap(end_content);
 	arg->cnt = end_content;
 }

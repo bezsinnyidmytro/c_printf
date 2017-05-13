@@ -92,3 +92,12 @@ char			*ft_ftoa(long double val, int prec)
 	float_put_dot(&res, prec);
 	return (res);
 }
+
+char			*fe_dispatcher(t_pfarg *arg)
+{
+	if (arg->c_type == 'f' || arg->c_type == 'F')
+		return (ft_ftoa(va_arg(*(arg->argp), double), arg->prec));
+	else if (arg->c_type == 'e' || arg->c_type == 'E')
+		return (ft_etoa(va_arg(*(arg->argp), double), arg->prec));
+	return (NULL);
+}

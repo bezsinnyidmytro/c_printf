@@ -22,7 +22,8 @@ PRINTF_FILES =	ft_printf.c \
 				printf_formats.c \
 				zero_minus_flags.c \
 				float_round.c \
-				float_to_str.c
+				float_to_str.c \
+				e_conversion.c
 PRINTF_SRC =	$(addprefix $(PRINTF_DIR), $(PRINTF_FILES))
 
 LIBFT_DIR =		libft_src/

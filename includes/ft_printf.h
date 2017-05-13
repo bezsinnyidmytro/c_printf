@@ -68,7 +68,11 @@ char				*ft_dstrjoin(char *s1, char *s2, int ff1, int ff2);
 char				*ft_strcat(char *s1, const char *s2);
 void				ft_strcap(char *str);
 void				ft_swap_chars(char *a, char *b);
+//char				*ft_ftoa(long double val, int prec);
 char				*ft_ftoa(long double val, int prec);
+char				*ft_etoa(long double val, int prec);
 int					*parse_values(int a, int b, int c);
+char				*e_conversion(long double val, int prec);
+char				*fe_dispatcher(t_pfarg *arg);
 
 #endif
